@@ -67,3 +67,15 @@ function showToast() {
 }
 
 loadEmojis();
+
+// Fungsi global agar bisa dipanggil dari HTML onclick
+window.filterByCategory = function(category) {
+    // 1. Masukkan kata kategori ke dalam kotak pencarian (opsional, agar user tahu apa yang difilter)
+    searchInput.value = category;
+    
+    // 2. Kirim perintah pencarian secara manual
+    // Kita buat event "input" buatan agar fungsi searchInput.oninput yang lama berjalan
+    const event = new Event('input', { bubbles: true });
+    searchInput.dispatchEvent(event);
+}
+

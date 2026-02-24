@@ -2,30 +2,34 @@ const container = document.getElementById('emojiContainer');
 const searchInput = document.getElementById('searchInput');
 const toast = document.getElementById('toast');
 
-// Fungsi untuk mengambil data dari file JSON
 async function loadEmojis() {
     try {
-        // Mengambil data dari file emojis.json
         const response = await fetch('emoji.json');
         const data = await response.json();
         
-        // Karena format emojilib adalah objek, kita ubah jadi array agar mudah diolah
         const emojiArray = Object.keys(data).map(key => {
             return {
                 char: key,
-                name: data[key].join(" ") // menggabungkan kata kunci menjadi satu teks
+                name: data[key].join(" ")
             };
         });
 
-        // Tampilkan semua emoji saat pertama kali load
-        displayEmojis(emojiArray);
+        // KUNCI UTAMA: Jangan panggil displayEmojis() di sini
+        // agar halaman awal tetap kosong.
 
-        // Aktifkan fitur pencarian
         searchInput.oninput = (e) => {
-            const filtered = emojiArray.filter(emoji => 
-                emoji.name.toLowerCase().includes(e.target.value.toLowerCase())
-            );
-            displayEmojis(filtered);
+            const keyword = e.target.value.trim().toLowerCase();
+            
+            // Logika: Jika kolom kosong, bersihkan kontainer. 
+            // Jika ada teks, cari dan tampilkan.
+            if (keyword.length > 0) {
+                const filtered = emojiArray.filter(emoji => 
+                    emoji.name.toLowerCase().includes(keyword)
+                );
+                displayEmojis(filtered);
+            } else {
+                container.innerHTML = ""; // Kosongkan jika kolom pencarian dihapus
+            }
         };
 
     } catch (error) {
@@ -35,16 +39,26 @@ async function loadEmojis() {
 
 function displayEmojis(emojis) {
     container.innerHTML = "";
-    emojis.forEach(emoji => {
+    
+    // Opsional: Batasi jumlah hasil pencarian agar tidak terlalu berat (misal 100 emoji pertama)
+    const limitedEmojis = emojis.slice(0, 100);
+
+    limitedEmojis.forEach(emoji => {
         const div = document.createElement('div');
         div.classList.add('emoji-card');
         div.innerText = emoji.char;
+        div.title = emoji.name; // Munculkan deskripsi saat kursor di atas emoji
         div.onclick = () => {
             navigator.clipboard.writeText(emoji.char);
             showToast();
         };
         container.appendChild(div);
     });
+
+    // Jika tidak ada hasil
+    if (emojis.length === 0) {
+        container.innerHTML = "<p style='grid-column: 1/-1; color: #888;'>Emoji tidak ditemukan...</p>";
+    }
 }
 
 function showToast() {
@@ -52,5 +66,4 @@ function showToast() {
     setTimeout(() => toast.classList.add('hidden'), 1500);
 }
 
-// Jalankan fungsi load
 loadEmojis();

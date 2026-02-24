@@ -62,4 +62,28 @@ header h1 { color: #333; }
     z-index: 1000;
 }
 
+.category-wrapper {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap; /* Agar tombol turun ke bawah jika layar HP kecil */
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+.cat-btn {
+    background-color: white;
+    border: 1px solid #ddd;
+    padding: 8px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+}
+
+.cat-btn:hover {
+    background-color: #0070f3;
+    color: white;
+    border-color: #0070f3;
+}
+
 .hidden { display: none; }

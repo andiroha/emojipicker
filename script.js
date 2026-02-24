@@ -70,12 +70,17 @@ loadEmojis();
 
 // Fungsi global agar bisa dipanggil dari HTML onclick
 window.filterByCategory = function(category) {
-    // 1. Masukkan kata kategori ke dalam kotak pencarian (opsional, agar user tahu apa yang difilter)
-    searchInput.value = category;
-    
-    // 2. Kirim perintah pencarian secara manual
-    // Kita buat event "input" buatan agar fungsi searchInput.oninput yang lama berjalan
+    let searchTerm = category;
+
+    // Jika yang diklik adalah 'object', kita cari beberapa kata kunci benda umum
+    if (category === 'object') {
+        // Kita bisa arahkan ke kata kunci yang paling banyak di file JSON untuk benda
+        searchTerm = "instrument"; // atau 'tool', atau 'box'
+    }
+
+    searchInput.value = searchTerm;
     const event = new Event('input', { bubbles: true });
     searchInput.dispatchEvent(event);
 }
+
 
